@@ -24,7 +24,16 @@ public class Main {
                     break;
 
                 case "2":
-                    // min/max/medel pris
+                    if (requireDataLoad(prices)) {
+                        double min = PriceAnalysis.minPrice(prices);
+                        double max = PriceAnalysis.maxPrice(prices);
+                        double avg = PriceAnalysis.averagePrice(prices);
+
+                        IO.println("Lägsta pris:  " + String.format("%.2f", min) + " öre/kWh");
+                        IO.println("Högsta pris:  " + String.format("%.2f", max) + " öre/kWh");
+                        IO.println("Medelpris:    " + String.format("%.2f", avg) + " öre/kWh");
+                    }
+
                     break;
                 case "3":
                     // Sortera priser (lågt till högt)

@@ -1,9 +1,15 @@
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PriceData {
+    @JsonProperty("SEK_per_kWh")
     private double SEK_per_kWh;
+
+    @JsonProperty("time_start")
     private String time_start;
+
+    @JsonProperty("time_end")
     private String time_end;
 
     public PriceData() {}
