@@ -24,10 +24,25 @@ public class Main {
                     break;
 
                 case "2":
-                    // min/max/medel pris
+                    if (requireDataLoad(prices)) {
+                        double min = PriceAnalysis.minPrice(prices);
+                        double max = PriceAnalysis.maxPrice(prices);
+                        double avg = PriceAnalysis.averagePrice(prices);
+
+                        IO.println("Lägsta pris:  " + String.format("%.2f", min) + " öre/kWh");
+                        IO.println("Högsta pris:  " + String.format("%.2f", max) + " öre/kWh");
+                        IO.println("Medelpris:    " + String.format("%.2f", avg) + " öre/kWh");
+                    }
+
                     break;
                 case "3":
                     // Sortera priser (lågt till högt)
+                    if (requireDataLoad(prices)) {
+                        List<PriceData> sorted = PriceAnalysis.sortByPrice(prices);
+                        for (PriceData p : sorted) {
+                            IO.println(p.toString());
+                        }
+                    }
                     break;
                 case "4":
                     // Bästa laddningstid (4h sammanhängande)
@@ -63,7 +78,7 @@ public class Main {
     }
 
     private static boolean requireDataLoad(List<PriceData> prices) {
-        if (prices == null) {
+        if (prices == null || prices.isEmpty()) {
             IO.println("Du måste välja elområde (alternativ 1) först.");
             return false;
         }
