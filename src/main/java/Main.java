@@ -1,9 +1,10 @@
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) {
+        static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         ElClient client = new ElClient();
         List <PriceData> prices = null;
@@ -54,7 +55,7 @@ public class Main {
 
     private static List<PriceData> getData(ElClient client, String area) {
         try {
-            return client.getPrices(area, LocalDate.now());
+            return client.getPrices(area, LocalDate.now(ZoneId.of("Europe/Stockholm")));
         } catch (Exception e) {
             IO.println("Kunde inte hämta prisdata: " + e.getMessage());
             return null;

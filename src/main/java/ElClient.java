@@ -9,6 +9,7 @@ import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -40,6 +41,7 @@ public class ElClient {
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
+                .timeout(Duration.ofSeconds(10))
                 .GET()
                 .build();
 
@@ -52,10 +54,11 @@ public class ElClient {
 
         String json = response.body();
 
-        // 3. Spara till cache innan vi returnerar
+        // 3. Parsea först, cacha bara om det lyckas
+        List<PriceData> prices = parseJson(json);
         saveToCache(cachePath, json);
 
-        return parseJson(json);
+        return prices;
     }
 
     private String buildUrl(String elArea, LocalDate datum) {
