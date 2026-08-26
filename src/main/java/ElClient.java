@@ -83,12 +83,21 @@ public class ElClient {
     }
 
     private void saveToCache(Path path, String json) {
+        Path tempFile = null;
         try {
-            Path tempFile = Files.createTempFile(path.getParent(), "tmp-", ".json");
+            tempFile = Files.createTempFile(path.getParent(), "tmp-", ".json");
             Files.writeString(tempFile, json);
             Files.move(tempFile, path, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
         } catch (IOException e) {
             IO.println("Varning: kunde inte spara cache (" + e.getMessage() + ")");
+        } finally {
+            if (tempFile != null) {
+                try {
+                    Files.deleteIfExists(tempFile);
+                } catch (IOException e) {
+                    // Inget mer vi kan göra åt en misslyckad städning; ignorera tyst
+                }
+            }
         }
     }
 
