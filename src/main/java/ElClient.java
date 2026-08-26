@@ -87,7 +87,12 @@ public class ElClient {
         try {
             tempFile = Files.createTempFile(path.getParent(), "tmp-", ".json");
             Files.writeString(tempFile, json);
-            Files.move(tempFile, path, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+            try {
+                Files.move(tempFile, path, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+            } catch (IOException e) {
+                // Extra felhantering för misslyckat atomiskt byte
+                Files.move(tempFile, path, StandardCopyOption.REPLACE_EXISTING);
+            }
         } catch (IOException e) {
             IO.println("Varning: kunde inte spara cache (" + e.getMessage() + ")");
         } finally {
@@ -95,7 +100,7 @@ public class ElClient {
                 try {
                     Files.deleteIfExists(tempFile);
                 } catch (IOException e) {
-                    // Inget mer vi kan göra åt en misslyckad städning; ignorera tyst
+
                 }
             }
         }
