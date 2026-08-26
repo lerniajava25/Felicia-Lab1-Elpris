@@ -9,6 +9,7 @@ import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
@@ -30,9 +31,12 @@ public class ElClient {
 
         // 1. Börjar kolla cache
         if (Files.exists(cachePath)) {
-            IO.println("(Läser från lokal cache: " + cachePath + ")");
-            String json = Files.readString(cachePath);
-            return parseJson(json);
+            try {
+                String cachedJson = Files.readString(cachePath);
+                return parseJson(cachedJson);
+            } catch (IOException e) {
+                IO.println("Varning: cache-filen kunde inte läsas, hämtar från API istället (" + e.getMessage() + ")");
+            }
         }
 
         // 2. Annars, hämta från API
@@ -80,9 +84,10 @@ public class ElClient {
 
     private void saveToCache(Path path, String json) {
         try {
-            Files.writeString(path, json);
+            Path tempFile = Files.createTempFile(path.getParent(), "tmp-", ".json");
+            Files.writeString(tempFile, json);
+            Files.move(tempFile, path, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
         } catch (IOException e) {
-
             IO.println("Varning: kunde inte spara cache (" + e.getMessage() + ")");
         }
     }
