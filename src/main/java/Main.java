@@ -78,7 +78,7 @@ public class Main {
     }
 
     private static boolean requireDataLoad(List<PriceData> prices) {
-        if (prices == null) {
+        if (prices == null || prices.isEmpty()) {
             IO.println("Du måste välja elområde (alternativ 1) först.");
             return false;
         }

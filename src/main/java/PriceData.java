@@ -45,6 +45,9 @@ public class PriceData {
     //Gör så det blir en snygg string med 2 decimaler
     @Override
     public String toString() {
+        if (time_start == null || time_start.length() < 16) {
+            return "Okänd tid - " + String.format("%.2f", getOrePerKWh()) + " öre/kWh";
+        }
         return time_start.substring(11, 16) + " - " + String.format("%.2f", getOrePerKWh()) + " öre/kWh";
     }
 }
