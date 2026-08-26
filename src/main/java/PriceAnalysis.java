@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class PriceAnalysis {
@@ -30,6 +32,14 @@ public class PriceAnalysis {
         }
         return sum / prices.size();
     }
+
+    //Sortera pris lågt till högt
+    public static List<PriceData> sortByPrice (List<PriceData> prices) {
+        List<PriceData> sorted = new ArrayList<>(prices);
+        sorted.sort(Comparator.comparingDouble(PriceData::getOrePerKWh));
+        return sorted;
+    }
+
 
     //Räkna ut bästa 4h med "sliding window"
 }

@@ -37,6 +37,12 @@ public class Main {
                     break;
                 case "3":
                     // Sortera priser (lågt till högt)
+                    if (requireDataLoad(prices)) {
+                        List<PriceData> sorted = PriceAnalysis.sortByPrice(prices);
+                        for (PriceData p : sorted) {
+                            IO.println(p.toString());
+                        }
+                    }
                     break;
                 case "4":
                     // Bästa laddningstid (4h sammanhängande)
