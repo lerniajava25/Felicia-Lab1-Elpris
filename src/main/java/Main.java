@@ -24,6 +24,7 @@ public class Main {
                     break;
 
                 case "2":
+                    // min, mav och medelpris
                     if (requireDataLoad(prices)) {
                         double min = PriceAnalysis.minPrice(prices);
                         double max = PriceAnalysis.maxPrice(prices);
@@ -48,7 +49,11 @@ public class Main {
                     // Bästa laddningstid (4h sammanhängande)
                     if (requireDataLoad(prices)) {
                         List<PriceData> bestPrice = PriceAnalysis.bestChargingWindow(prices, 4);
-                        IO.println("Bästa laddningstid (4h): ");
+
+                        String startTime = bestPrice.get(0).startTime();
+                        String endTime = bestPrice.get(bestPrice.size() - 1).endTime();
+
+                        IO.println("Bästa laddningstid (4h): " + startTime + "-" + endTime);
                         for (PriceData p : bestPrice) {
                             IO.println(p);
                         }
