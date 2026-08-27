@@ -48,7 +48,7 @@ public class Main {
                 case "4":
                     // Bästa laddningstid (4h sammanhängande)
                     if (requireDataLoad(prices)) {
-                        List<PriceData> bestPrice = PriceAnalysis.bestChargingWindow(prices, 4);
+                       try { List<PriceData> bestPrice = PriceAnalysis.bestChargingWindow(prices, 4);
 
                         double avgWindow = PriceAnalysis.averagePrice(bestPrice);
 
@@ -57,6 +57,10 @@ public class Main {
 
                         IO.println("Bästa laddningstid (4h): " + startTime + "-" + endTime + " - " +
                                 " Medelpris: " +  String.format("%.2f", avgWindow) + " öre/kWh");
+                    } catch (IllegalArgumentException e) {
+                           IO.println("Kunde inte beräkna bästa laddningstid: för lite prisdata tillgänglig ("
+                                   + e.getMessage() + ")");
+                       }
                     }
                     break;
                 case "e":

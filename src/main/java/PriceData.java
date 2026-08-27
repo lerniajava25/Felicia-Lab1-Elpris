@@ -43,10 +43,16 @@ public class PriceData {
     }
 
     public String startTime() {
+        if (time_start == null || time_start.length() < 16) {
+            return "??:??";
+        }
         return time_start.substring(11, 16);
     }
 
     public String endTime() {
+        if (time_end == null || time_end.length() < 16) {
+            return "??:??";
+        }
         return time_end.substring(11, 16);
     }
 
