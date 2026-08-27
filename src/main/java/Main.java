@@ -46,6 +46,13 @@ public class Main {
                     break;
                 case "4":
                     // Bästa laddningstid (4h sammanhängande)
+                    if (requireDataLoad(prices)) {
+                        List<PriceData> bestPrice = PriceAnalysis.bestChargingWindow(prices, 4);
+                        IO.println("Bästa laddningstid (4h): ");
+                        for (PriceData p : bestPrice) {
+                            IO.println(p);
+                        }
+                    }
                     break;
                 case "e":
                     runs = false;
