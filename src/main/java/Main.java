@@ -50,10 +50,14 @@ public class Main {
                     if (requireDataLoad(prices)) {
                         List<PriceData> bestPrice = PriceAnalysis.bestChargingWindow(prices, 4);
 
+                        double avgWindow = PriceAnalysis.averagePrice(bestPrice);
+
                         String startTime = bestPrice.get(0).startTime();
                         String endTime = bestPrice.get(bestPrice.size() - 1).endTime();
 
-                        IO.println("Bästa laddningstid (4h): " + startTime + "-" + endTime);
+                        IO.println("Bästa laddningstid (4h): " + startTime + "-" + endTime + " - " +
+                                " Medelpris: " +  String.format("%.2f", avgWindow) + " öre/kWh");
+
                         for (PriceData p : bestPrice) {
                             IO.println(p);
                         }
