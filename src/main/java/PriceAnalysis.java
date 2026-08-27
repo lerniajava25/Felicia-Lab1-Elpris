@@ -40,6 +40,28 @@ public class PriceAnalysis {
         return sorted;
     }
 
-
     //Räkna ut bästa 4h med "sliding window"
+     public static List<PriceData> bestChargingWindow (List<PriceData> prices, int windowSize) {
+         if (prices.size() < windowSize) {
+             throw new IllegalArgumentException(
+                     "Fler priser krävs");
+         }
+
+         int bestStartIndex = 0;
+         double bestSum = 0;
+         double currentSum = bestSum;
+
+         for (int i = 0; i < windowSize; i++) {
+            bestSum += prices.get(i).getOrePerKWh();
+
+             if (currentSum < bestSum) {
+                 bestSum = currentSum;
+                 bestStartIndex = i;
+             }
+         }
+
+         return prices.subList(bestStartIndex, bestStartIndex + windowSize);
+
+    }
+
 }
