@@ -52,15 +52,11 @@ public class Main {
 
                         double avgWindow = PriceAnalysis.averagePrice(bestPrice);
 
-                        String startTime = bestPrice.get(0).startTime();
+                        String startTime = bestPrice.getFirst().startTime();
                         String endTime = bestPrice.get(bestPrice.size() - 1).endTime();
 
                         IO.println("Bästa laddningstid (4h): " + startTime + "-" + endTime + " - " +
                                 " Medelpris: " +  String.format("%.2f", avgWindow) + " öre/kWh");
-
-                        for (PriceData p : bestPrice) {
-                            IO.println(p);
-                        }
                     }
                     break;
                 case "e":
