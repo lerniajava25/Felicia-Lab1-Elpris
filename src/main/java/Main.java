@@ -24,6 +24,7 @@ public class Main {
                     break;
 
                 case "2":
+                    // min, mav och medelpris
                     if (requireDataLoad(prices)) {
                         double min = PriceAnalysis.minPrice(prices);
                         double max = PriceAnalysis.maxPrice(prices);
@@ -46,6 +47,21 @@ public class Main {
                     break;
                 case "4":
                     // Bästa laddningstid (4h sammanhängande)
+                    if (requireDataLoad(prices)) {
+                       try { List<PriceData> bestPrice = PriceAnalysis.bestChargingWindow(prices, 4);
+
+                        double avgWindow = PriceAnalysis.averagePrice(bestPrice);
+
+                        String startTime = bestPrice.getFirst().startTime();
+                        String endTime = bestPrice.get(bestPrice.size() - 1).endTime();
+
+                        IO.println("Bästa laddningstid (4h): " + startTime + "-" + endTime + " - " +
+                                " Medelpris: " +  String.format("%.2f", avgWindow) + " öre/kWh");
+                    } catch (IllegalArgumentException e) {
+                           IO.println("Kunde inte beräkna bästa laddningstid: för lite prisdata tillgänglig ("
+                                   + e.getMessage() + ")");
+                       }
+                    }
                     break;
                 case "e":
                     runs = false;
