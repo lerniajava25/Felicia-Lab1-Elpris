@@ -1,7 +1,14 @@
+package electric.prices.analysis;
+
+import electric.prices.PriceData;
+
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
-public class BestChargePrice {
-    //Räkna ut bästa 4h med "sliding window"
+public class PriceSorting {
+
+    // Gör om från 15min till timmar
     private static int entriesPerHour(List<PriceData> prices) { //göra om från 15min intervaller till 1h
         String start = prices.getFirst().getTime_start();
         String end = prices.getFirst().getTime_end();
@@ -15,7 +22,35 @@ public class BestChargePrice {
         }
         return 60 / minutesPerEntry;
     }
+    public static List<PriceData> sortByPrice (List<PriceData> prices) {
+        List<PriceData> sorted = new ArrayList<>(prices);
+        sorted.sort(Comparator.comparingDouble(PriceData::getOrePerKWh));
+        return sorted;
+    }
 
+    //Sortera pris lågt till högt
+    public static List<PriceData> groupByHour(List<PriceData> prices) {
+        int perHour = entriesPerHour(prices);
+        List<PriceData> hourlyPrices = new ArrayList<>();
+
+        for (int i = 0; i < prices.size(); i += perHour) {
+            int end = Math.min(i + perHour, prices.size());
+            List<PriceData> hourGroup = prices.subList(i, end);
+
+            double avgOre = PriceStatistics.averagePrice(hourGroup);
+
+            PriceData hourBlock = new PriceData();
+            hourBlock.setSEK_per_kWh(avgOre / 100.0);
+            hourBlock.setTime_start(hourGroup.getFirst().getTime_start());
+            hourBlock.setTime_end(hourGroup.getLast().getTime_end());
+
+            hourlyPrices.add(hourBlock);
+        }
+
+        return hourlyPrices;
+    }
+
+    //Bästa pris (4h sammanhängande)
     public static List<PriceData> bestChargingWindow(List<PriceData> prices, int hours) {
         int entriesPerHour = entriesPerHour(prices);
         int windowSize = hours * entriesPerHour;
@@ -44,4 +79,5 @@ public class BestChargePrice {
 
         return prices.subList(bestStartIndex, bestStartIndex + windowSize);
     }
+
 }

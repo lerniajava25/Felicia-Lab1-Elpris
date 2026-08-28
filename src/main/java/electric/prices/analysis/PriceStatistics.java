@@ -1,8 +1,10 @@
-import java.util.ArrayList;
-import java.util.Comparator;
+package electric.prices.analysis;
+
+import electric.prices.PriceData;
+
 import java.util.List;
 
-public class PriceAnalysis {
+public class PriceStatistics {
     //Räkna ut min-pris
     public static double minPrice (List<PriceData> prices) {
     double min = prices.getFirst().getOrePerKWh(); //Börjar med första talet i listan
@@ -32,12 +34,4 @@ public class PriceAnalysis {
         }
         return sum / prices.size();
     }
-
-    //Sortera pris lågt till högt
-    public static List<PriceData> sortByPrice (List<PriceData> prices) {
-        List<PriceData> sorted = new ArrayList<>(prices);
-        sorted.sort(Comparator.comparingDouble(PriceData::getOrePerKWh));
-        return sorted;
-    }
-
 }

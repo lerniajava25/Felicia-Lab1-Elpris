@@ -1,3 +1,8 @@
+package electric.prices;
+
+import electric.prices.analysis.PriceSorting;
+import electric.prices.analysis.PriceStatistics;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -10,7 +15,7 @@ import java.util.Scanner;
 public class Main {
         static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        ElClient client = new ElClient();
+        ElPriceApiClient client = new ElPriceApiClient();
         List <PriceData> prices = null;
         String elArea = loadLastElArea();
 
@@ -39,9 +44,9 @@ public class Main {
                 case "2":
                     // min, max och medelpris
                     if (requireDataLoad(prices)) {
-                        double min = PriceAnalysis.minPrice(prices);
-                        double max = PriceAnalysis.maxPrice(prices);
-                        double avg = PriceAnalysis.averagePrice(prices);
+                        double min = PriceStatistics.minPrice(prices);
+                        double max = PriceStatistics.maxPrice(prices);
+                        double avg = PriceStatistics.averagePrice(prices);
 
                         IO.println("Lägsta pris:  " + String.format("%.2f", min) + " öre/kWh");
                         IO.println("Högsta pris:  " + String.format("%.2f", max) + " öre/kWh");
@@ -52,7 +57,8 @@ public class Main {
                 case "3":
                     // Sortera priser (lågt till högt)
                     if (requireDataLoad(prices)) {
-                        List<PriceData> sorted = PriceAnalysis.sortByPrice(prices);
+                        List<PriceData> hourly = PriceSorting.groupByHour(prices);
+                        List<PriceData> sorted = PriceSorting.sortByPrice(hourly);
                         for (PriceData p : sorted) {
                             IO.println(p.toString());
                         }
@@ -61,9 +67,9 @@ public class Main {
                 case "4":
                     // Bästa laddningstid (4h sammanhängande)
                     if (requireDataLoad(prices)) {
-                       try { List<PriceData> bestPrice = BestChargePrice.bestChargingWindow(prices, 4);
+                       try { List<PriceData> bestPrice = PriceSorting.bestChargingWindow(prices, 4);
 
-                        double avgWindow = PriceAnalysis.averagePrice(bestPrice);
+                        double avgWindow = PriceStatistics.averagePrice(bestPrice);
 
                         String startTime = bestPrice.getFirst().startTime();
                         String endTime = bestPrice.get(bestPrice.size() - 1).endTime();
@@ -130,7 +136,7 @@ public class Main {
         return true;
     }
 
-    private static List<PriceData> getData(ElClient client, String area) {
+    private static List<PriceData> getData(ElPriceApiClient client, String area) {
         try {
             return client.getPrices(
                     area,
