@@ -1,3 +1,5 @@
+package electric.prices;
+
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -13,13 +15,13 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
 
-public class ElClient {
+public class ElPriceApiClient {
 
     private static final String CACHE_MAPP = "cache";
     private final HttpClient httpClient;
     private final ObjectMapper objectMapper;
 
-    public ElClient() {
+    public ElPriceApiClient() {
         this.httpClient = HttpClient.newHttpClient();
         this.objectMapper = new ObjectMapper();
         this.objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
