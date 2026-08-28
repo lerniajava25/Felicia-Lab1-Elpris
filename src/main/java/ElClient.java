@@ -9,7 +9,6 @@ import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
@@ -83,28 +82,16 @@ public class ElClient {
     }
 
     private void saveToCache(Path path, String json) {
-        Path tempFile = null;
         try {
-            tempFile = Files.createTempFile(path.getParent(), "tmp-", ".json");
-            Files.writeString(tempFile, json);
-            try {
-                Files.move(tempFile, path, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
-            } catch (IOException e) {
-                // Extra felhantering för misslyckat atomiskt byte
-                Files.move(tempFile, path, StandardCopyOption.REPLACE_EXISTING);
-            }
+            Files.writeString(path, json);
         } catch (IOException e) {
             IO.println("Varning: kunde inte spara cache (" + e.getMessage() + ")");
-        } finally {
-            if (tempFile != null) {
                 try {
-                    Files.deleteIfExists(tempFile);
-                } catch (IOException e) {
-
+                    Files.deleteIfExists(path);
+                } catch (IOException ignored) {
                 }
             }
         }
-    }
 
     private List<PriceData> parseJson(String json) throws IOException {
         return objectMapper.readValue(json, objectMapper.getTypeFactory()
