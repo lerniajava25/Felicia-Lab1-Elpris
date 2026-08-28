@@ -39,4 +39,6 @@ build/
 .DS_Store
 
 # Cache (elområde)
-/.cache/
+/cache/
+
+last_area.txt
